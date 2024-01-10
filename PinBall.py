@@ -14,7 +14,7 @@ class StartScreen(BoxLayout):
 
         self.orientation = 'vertical'
 
-        title_label = Label(text='Pinball Game', font_size='30sp', size_hint=(1, 0.5))
+        title_label = Label(text='Pinball Game', font_size='50sp', size_hint=(1, 0.5))
         start_button = Button(text='Start Game', size_hint=(1, 0.5))
         start_button.bind(on_press=start_game_callback)
 
