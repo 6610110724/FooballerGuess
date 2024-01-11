@@ -44,10 +44,23 @@ class PinballGame(Screen):
 
         self.ball_radius = 20
         self.ball_pos = [100, 100]
-        self.ball_velocity = [5, 5]
+        self.ball_velocity = [2.5, 2.5]  # Decreased velocity
         self.start_screen_callback = start_screen_callback
 
+        self.score_label = Label(text=f"Score: {self.score}/{self.max_score}", size_hint_y=None, height=44)
+        self.remaining_time_label = Label(text=f"Time: {self.remaining_time}s", size_hint_y=None, height=44)
+        self.exit_button = Button(text="Exit", on_press=self.exit_game, size_hint_y=None, height=44)
+        self.reset_button = Button(text="Reset", on_press=self.reset_game, size_hint_y=None, height=44)
+
+        self.add_widget(self.score_label)
+        self.add_widget(self.remaining_time_label)
+        self.add_widget(self.exit_button)
+        self.add_widget(self.reset_button)
+        self.add_widget(self.pause_button)
+        self.add_widget(self.stop_button)
+
         Clock.schedule_once(self.setup_canvas)
+        Clock.schedule_interval(self.update, 1 / 60.0)  
 
     def setup_canvas(self, dt):
         with self.canvas:
@@ -57,7 +70,6 @@ class PinballGame(Screen):
 
     def update(self, dt):
         self.move_ball()
-        self.check_collision()
 
     def move_ball(self):
         self.ball_pos[0] += self.ball_velocity[0]
@@ -68,14 +80,31 @@ class PinballGame(Screen):
             self.ball_velocity[1] *= -1
         self.ball.pos = (self.ball_pos[0] - self.ball_radius, self.ball_pos[1] - self.ball_radius)
 
-    def check_collision(self):
-        pass
-
-    def on_touch_down(self, touch):
-        if self.ball.collide_point(*touch.pos):
+    def check_collision(self, touch):
+        if (
+            self.ball_pos[0] - self.ball_radius < touch.x < self.ball_pos[0] + self.ball_radius
+            and self.ball_pos[1] - self.ball_radius < touch.y < self.ball_pos[1] + self.ball_radius
+        ):
             # Reset the ball position to the center of the screen
             self.ball_pos = [self.width / 2, self.height / 2]
             self.ball.pos = (self.ball_pos[0] - self.ball_radius, self.ball_pos[1] - self.ball_radius)
+            # Start the game or perform any other actions here
+
+    def on_touch_down(self, touch):
+        self.check_collision(touch)
+
+    def stop_game(self, button):
+        Clock.unschedule(self.update_timer)
+        self.remaining_time_label.text = "Time: 0s"
+        self.show_game_result()
+
+    def update_timer(self, dt):
+        self.remaining_time -= 1
+        self.remaining_time_label.text = f"Time: {self.remaining_time}s"
+
+    def reset_game(self, button):
+        Clock.unschedule(self.update_timer)
+        self.remaining_time_label.text = f"Time: {self.time_limit}s"
 
 class PinballApp(App):
     def build(self):
