@@ -71,7 +71,7 @@ class PinballGame(Screen):
 
     def exit(self, instance):
         self.manager.current = 'start_menu'
-        self.show_game_over_popup()
+        self.show_game_over_popup
 
     def toggle_pause(self, instance):
         self.is_paused = not self.is_paused
