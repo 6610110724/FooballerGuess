@@ -3,21 +3,22 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
+from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.image import Image
-from kivy.uix.widget import Widget
 
 from kivy.clock import Clock
 import random
+
 
 class StartMenu(Screen):
     def __init__(self, **kwargs):
         super(StartMenu, self).__init__(**kwargs)
         layout = BoxLayout(orientation='vertical')
 
-        backgroundImage = 'background/ggo3.png'
-        self.game_name = Button(text='GuessFootballer', font_size=100, size_hint=(None, None), size=(1200, 400))
+        backgroundImage = 'background/who1.png'
+        self.game_name = Button(text=' ', font_size=100, size_hint=(None, None), size=(1200, 400))
         self.game_name.background_normal = backgroundImage
         
         names_input = TextInput(hint_text="Enter Name", multiline=False, font_size=60)
@@ -55,33 +56,29 @@ class ButtonInGame(Screen):
         self.footballers = ["messi", "ronaldo", "mbappe"]  # Add more footballers as needed
         self.current_footballer = None
 
-        self.image = Image(source='', size_hint_y=None, height=60)
-        
-        self.text_input = TextInput(multiline=False, size_hint_y=None, height=60)
-        
-        self.submit_button = Button(text='Submit', on_press=self.check_answer, size_hint_y=None, height=60)
-        
-        self.result_label = Label(text='', size_hint_y=None, height=60)
-        
+#GameLogics
+        self.image = Image(source='', size_hint_y=None)
 
+        self.text_input = TextInput(multiline=False, size_hint_y=None)
+
+        self.answer_button = Button(text='Submit', on_press=self.check_answer, size_hint_y=None)
+        self.answer_button.background_color = (1/255, 255/255, 1/255, 1)
         self.new_game()
     
-        self.pause_button = Button(text='Pause', on_press=self.toggle_pause, size_hint_y=None, height=60)
+#ExtraButtons
+        self.pause_button = Button(text='Pause', on_press=self.toggle_pause, size_hint_y=None)
         self.pause_button.background_color = (255/255, 255/255, 1/255, 1)
         
-        self.exit_button = Button(text='Exit Game', on_press=self.exit, size_hint_y=None, height=60)
+        self.exit_button = Button(text='Give up, Who the fuck is that', on_press=self.exit, size_hint_y=None)
         self.exit_button.background_color = (255/255, 1/255, 1/255, 1)
 
-        self.timer_label = Label(text="Time remaining: 180", size_hint_y=None, height=50)
+        self.timer_label = Label(text="Time remaining: 90", size_hint_y=None)
 
-        layout.add_widget(self.result_label)
         layout.add_widget(self.image)
         layout.add_widget(self.text_input)
-        layout.add_widget(self.submit_button)
-        
+        layout.add_widget(self.answer_button)
         layout.add_widget(self.pause_button)
         layout.add_widget(self.exit_button)
-        
         layout.add_widget(self.timer_label)
 
         self.add_widget(layout)
@@ -91,14 +88,16 @@ class ButtonInGame(Screen):
         self.current_footballer = random.choice(self.footballers)
         self.image.source = f'image/{self.current_footballer}.png'  
         self.text_input.text = ''
-        self.result_label.text = 'Guess the footballer!'
+        
 
     def check_answer(self, instance):
         user_input = self.text_input.text.lower()
         if user_input == self.current_footballer:
-            self.result_label.text = 'Correct! Well done.'
+            self.answer_button.text = 'Correct! Well done.'
+            self.manager.get_screen('Button_In_Game').start_game()
+            self.manager.current = 'Button_In_Game'
         else:
-            self.result_label.text = f'Incorrect. The correct answer is {self.current_footballer}.'
+            self.answer_button.text = f'Incorrect. The correct answer is {self.current_footballer}.'
 
     def start_game(self):
         self.is_game_started = True
@@ -111,7 +110,7 @@ class ButtonInGame(Screen):
         popup.open()
         
     def reset_timer(self):
-        self.timer_label.text = "Time remaining: 180"
+        self.timer_label.text = "Time remaining: 90"
 
     def toggle_pause(self, instance):
         self.is_paused = not self.is_paused
