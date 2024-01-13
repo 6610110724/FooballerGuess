@@ -18,8 +18,11 @@ class StartMenu(Screen):
         super(StartMenu, self).__init__(**kwargs)
         layout = BoxLayout(orientation='vertical')
 
+        bgi = 'background/ggo.png'
+        background_image = f'{bgi}'
         self.game_name = Button(text='Jaggle ball', font_size=100, size_hint=(None, None), size=(1200, 400))
-        self.game_name.background_color = (1/255, 0/255, 0/255, 0)
+        self.game_name.background_normal = background_image
+        
 
         names_input = TextInput(hint_text="Enter Name", multiline=False, font_size=60)
         self.name_input = names_input
