@@ -44,13 +44,28 @@ class StartMenu(Screen):
     def callback(self, instance):
         self.start_button.text = 'Join with name :' + ' ' + self.name_input.text
 
-class ButtonInGame():
+class ButtonInGame(Screen):
     def __init__(self, **kwargs):
         super(ButtonInGame, self).__init__(**kwargs)
+
         self.is_paused = False
         self.is_game_started = False
 
         layout = BoxLayout(orientation='vertical')
+        self.footballers = ["messi", "ronaldo", "mbappe"]  # Add more footballers as needed
+        self.current_footballer = None
+
+        self.image = Image(source='', size_hint_y=None, height=60)
+        
+        self.text_input = TextInput(multiline=False, size_hint_y=None, height=60)
+        
+        self.submit_button = Button(text='Submit', on_press=self.check_answer, size_hint_y=None, height=60)
+        
+        self.result_label = Label(text='', size_hint_y=None, height=60)
+        
+
+        self.new_game()
+    
         self.pause_button = Button(text='Pause', on_press=self.toggle_pause, size_hint_y=None, height=60)
         self.pause_button.background_color = (255/255, 255/255, 1/255, 1)
         
@@ -59,12 +74,31 @@ class ButtonInGame():
 
         self.timer_label = Label(text="Time remaining: 180", size_hint_y=None, height=50)
 
+        layout.add_widget(self.result_label)
+        layout.add_widget(self.image)
+        layout.add_widget(self.text_input)
+        layout.add_widget(self.submit_button)
+        
         layout.add_widget(self.pause_button)
         layout.add_widget(self.exit_button)
+        
         layout.add_widget(self.timer_label)
 
         self.add_widget(layout)
         Clock.schedule_interval(self.update_timer, 1)
+
+    def new_game(self):
+        self.current_footballer = random.choice(self.footballers)
+        self.image.source = f'image/{self.current_footballer}.png'  
+        self.text_input.text = ''
+        self.result_label.text = 'Guess the footballer!'
+
+    def check_answer(self, instance):
+        user_input = self.text_input.text.lower()
+        if user_input == self.current_footballer:
+            self.result_label.text = 'Correct! Well done.'
+        else:
+            self.result_label.text = f'Incorrect. The correct answer is {self.current_footballer}.'
 
     def start_game(self):
         self.is_game_started = True
@@ -101,7 +135,7 @@ class ButtonInGame():
         popup = Popup(title='Game Over', content=Label(text="Time Up"), size_hint=(None, None),
                       size=(400, 200))
         popup.open()
-        
+
 class GuessFootballerApp(App):
     def build(self):
         sm = ScreenManager()
