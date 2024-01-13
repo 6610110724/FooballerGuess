@@ -53,11 +53,13 @@ class ButtonInGame(Screen):
         self.is_game_started = False
 
         layout = BoxLayout(orientation='vertical')
-        self.footballers = ["messi", "ronaldo", "mbappe"]  # Add more footballers as needed
+        self.footballers = ["messi", "ronaldo", "mbappe","ronaldinho", "kaka", 
+                            "beckham", "gerrard", "haaland"]  
+        
         self.current_footballer = None
 
 #GameLogics
-        self.image = Image(source='', size_hint_y=None)
+        self.image = Image(source='', size_hint_y=None, size=(1200, 400))
 
         self.text_input = TextInput(multiline=False, size_hint_y=None)
 
@@ -94,10 +96,9 @@ class ButtonInGame(Screen):
         user_input = self.text_input.text.lower()
         if user_input == self.current_footballer:
             self.answer_button.text = 'Correct! Well done.'
-            self.manager.get_screen('Button_In_Game').start_game()
-            self.manager.current = 'Button_In_Game'
+            self.new_game()
         else:
-            self.answer_button.text = f'Incorrect. The correct answer is {self.current_footballer}.'
+            self.answer_button.text = f'Incorrect, Try Again'
 
     def start_game(self):
         self.is_game_started = True
