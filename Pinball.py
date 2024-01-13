@@ -10,14 +10,12 @@ from kivy.graphics import Ellipse, Color
 from kivy.clock import Clock
 import random
 
-
 class StartMenu(Screen):
     def __init__(self, **kwargs):
         super(StartMenu, self).__init__(**kwargs)
-
         layout = BoxLayout(orientation='vertical')
-
-        self.game_name = Button(text='PINBALL GAME',font_size = 100)
+        
+        self.game_name = Button(text='COINSHOOTER GAME',font_size = 100)
         self.game_name.background_color = (120/255, 160/255, 250/255, 1) 
 
         names_input = TextInput(hint_text="Enter Name", multiline=False,font_size=60)
@@ -39,15 +37,14 @@ class StartMenu(Screen):
         self.add_widget(layout)
 
     def go_to_game(self, instance):
-        self.manager.current = 'pinball_game'
+        self.manager.current = 'coinshooter_game'
 
     def callback(self, instance):
         self.start_button.text = 'Join with name:' + ' ' + self.name_input.text
 
-
-class PinballGame(Screen):
+class CoinShooterGame(Screen):
     def __init__(self, **kwargs):
-        super(PinballGame, self).__init__(**kwargs)
+        super(CoinShooterGame, self).__init__(**kwargs)
         self.is_paused = False
 
         layout = BoxLayout(orientation='vertical')
@@ -59,25 +56,24 @@ class PinballGame(Screen):
 
         self.timer_label = Label(text="Time: 180", size_hint_y=None, height=50)
 
-
         layout.add_widget(self.pause_button)
         layout.add_widget(self.exit_button)
         layout.add_widget(self.timer_label)
 
         self.add_widget(layout)
-
         Clock.schedule_interval(self.update_timer, 1)
-
 
     def exit(self, instance):
         self.manager.current = 'start_menu'
-        self.show_game_over_popup
+        popup = Popup(title='Game Over', content=Label(text='Try Again Later'), size_hint=(None, None),
+                      size=(400, 200))
+        popup.open()
 
     def toggle_pause(self, instance):
         self.is_paused = not self.is_paused
-        if self.pause_button.text == 'Pause' :
-            self.pause_button.text = 'Resume'
-        else :
+        if self.pause_button.text == 'Pause':
+            self.pause_button.text = 'Play'
+        else:
             self.pause_button.text = 'Pause'
 
     def update_timer(self, dt):
@@ -89,27 +85,29 @@ class PinballGame(Screen):
             else:
                 self.show_game_over_popup()
 
-    def update_pinball(self, dt):
-        if not self.is_paused:
-            pass 
-    
-    def show_game_over_popup(self, dt):
-        self.update_timer()
-        popup = Popup(title='Game Over', content=Label(text='Try Again Later'), size_hint=(None, None),
+    def show_game_over_popup(self):
+        popup = Popup(title='Game Over', content=Label(text="Time Up"), size_hint=(None, None),
                       size=(400, 200))
         popup.open()
 
+    def start_game(self):
+        Clock.schedule_interval(self.update_timer, 1)
+
+    def on_pre_enter(self):
+        self.is_paused = True
+        self.pause_button.text = 'Play'
 
 
 
 
-class MyApp(App):
+
+class CoinshooterApp(App):
     def build(self):
         sm = ScreenManager()
         sm.add_widget(StartMenu(name='start_menu'))
-        sm.add_widget(PinballGame(name='pinball_game'))
+        sm.add_widget(CoinShooterGame(name='coinshooter_game'))
         return sm
 
 
 if __name__ == '__main__':
-    MyApp().run()
+    CoinshooterApp().run()
