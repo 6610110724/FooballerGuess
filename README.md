@@ -1,7 +1,8 @@
-## FootballerGuess
+# FootballerGuess
 
-# 1. How does it work
+## 1. How does it work
 
+###1.1Import Kivy for use any Kivy ui and application with the code
 
 #from kivy.app import App
 #from kivy.uix.screenmanager import ScreenManager, Screen
