@@ -3,7 +3,7 @@ This is a Kivy game that test your knowledge about football players.
 
 ## Features
 
-### Puzzle Game
+### Footballer Guess Game
 - Test your knowledge about football players.
 - See an image of football player.
 - Type his name correctly as you know.
