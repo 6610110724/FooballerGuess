@@ -33,7 +33,7 @@ This is a Kivy game that test your knowledge about football players.
 
 4. **Enjoy the game.**
 
-## Game Example
+# Game Example
 
 ## Enter Name
 <div align="center">
