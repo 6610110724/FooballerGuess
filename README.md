@@ -33,6 +33,8 @@ This is a Kivy game that test your knowledge about football players.
 
 4. **Enjoy the game.**
 
+
+
 # Game Example
 
 ## Enter Name
@@ -60,7 +62,7 @@ This is a Kivy game that test your knowledge about football players.
     <img width="598" alt="timeup" src="https://github.com/6610110724/FooballerGuess/assets/153788607/b9db23d9-816b-4ae2-8134-a98e15f723da">
 </div>
 
-## Quit Gmae
+## Quit Game
 <div align="center">
     <img width="601" alt="Quit" src="https://github.com/6610110724/FooballerGuess/assets/153788607/a83372d3-1412-4cb9-9fd2-a160b37a09d2">    
 </div>
