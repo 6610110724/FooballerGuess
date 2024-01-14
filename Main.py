@@ -2,8 +2,8 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
+from kivy.core.audio import SoundLoader
 from kivy.uix.button import Button
-from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.image import Image
@@ -53,36 +53,41 @@ class ButtonInGame(Screen):
         self.is_game_started = False
 
         layout = BoxLayout(orientation='vertical')
-        self.footballers = ["messi", "ronaldo", "mbappe","ronaldinho", "kaka", 
-                            "beckham", "gerrard", "haaland"]  
+        self.footballers = ["alisson", "beckham", "de gea", "de bruyne", "del piero"
+                            , "ronaldo", "messi", "mbappe", "modric", "ronaldinho"
+                            , "kaka", "gerrard", "haaland", "van dijk", "kane"
+                            , "neymar",  "lewandowski", "neuer", "ibrahimovic", "hazard"]  
         
         self.current_footballer = None
 
 #GameLogics
         self.image = Image(source='', size_hint_y=None, size=(1200, 400))
 
-        self.text_input = TextInput(multiline=False, size_hint_y=None)
+        self.text_input = TextInput(multiline=False, size_hint_y=None, size=(1200, 150))
 
-        self.answer_button = Button(text='Submit', on_press=self.check_answer, size_hint_y=None)
+        self.answer_button = Button(text='Answer', on_press=self.check_answer, size_hint_y=None,size=(1200, 150), font_size=40)
         self.answer_button.background_color = (1/255, 255/255, 1/255, 1)
         self.new_game()
     
 #ExtraButtons
-        self.pause_button = Button(text='Pause', on_press=self.toggle_pause, size_hint_y=None)
+        self.pause_button = Button(text='Pause', on_press=self.toggle_pause, size_hint_y=None, size=(1200, 50), font_size=20)
         self.pause_button.background_color = (255/255, 255/255, 1/255, 1)
         
-        self.exit_button = Button(text='Give up, Who the fuck is that', on_press=self.exit, size_hint_y=None)
+        self.exit_button = Button(text='Exit', on_press=self.exit, size_hint_y=None, size=(1200, 50), font_size=20)
         self.exit_button.background_color = (255/255, 1/255, 1/255, 1)
-
-        self.timer_label = Label(text="Time remaining: 90", size_hint_y=None)
+        
+        self.score_label = Label(text="Score : " + ' ', size_hint_y=None, size=(1200, 50))
+        self.timer_label = Label(text="Time : 30", size_hint_y=None, size=(1200, 50))
+        
 
         layout.add_widget(self.image)
         layout.add_widget(self.text_input)
         layout.add_widget(self.answer_button)
         layout.add_widget(self.pause_button)
         layout.add_widget(self.exit_button)
+        layout.add_widget(self.score_label)
         layout.add_widget(self.timer_label)
-
+        
         self.add_widget(layout)
         Clock.schedule_interval(self.update_timer, 1)
 
@@ -91,11 +96,9 @@ class ButtonInGame(Screen):
         self.image.source = f'image/{self.current_footballer}.png'  
         self.text_input.text = ''
         
-
     def check_answer(self, instance):
         user_input = self.text_input.text.lower()
         if user_input == self.current_footballer:
-            self.answer_button.text = 'Correct! Well done.'
             self.new_game()
         else:
             self.answer_button.text = f'Incorrect, Try Again'
@@ -111,7 +114,7 @@ class ButtonInGame(Screen):
         popup.open()
         
     def reset_timer(self):
-        self.timer_label.text = "Time remaining: 90"
+        self.timer_label.text = "Time remaining: 30"
 
     def toggle_pause(self, instance):
         self.is_paused = not self.is_paused
@@ -128,20 +131,31 @@ class ButtonInGame(Screen):
                 self.timer_label.text = f"Time remaining: {remaining_time}"
             else:
                 self.show_game_over_popup()
+    
 
     def show_game_over_popup(self):
         self.is_game_started = False
         self.reset_timer()
-        popup = Popup(title='Game Over', content=Label(text="Time Up"), size_hint=(None, None),
+        popup = Popup(title='Time Up', content=Label(text="Your Score :" + f"{score}"), size_hint=(None, None),
                       size=(400, 200))
         popup.open()
+        self.exit
+
 
 class GuessFootballerApp(App):
     def build(self):
+
+        self.sound = SoundLoader.load('OleOla.mp3')
+        if self.sound:
+            self.sound.volume = 1
+            self.sound.loop = True
+            self.sound.play()
+
         sm = ScreenManager()
         sm.add_widget(StartMenu(name='start_menu'))
         sm.add_widget(ButtonInGame(name='Button_In_Game'))
         return sm
+    
 
 if __name__ == '__main__':
     GuessFootballerApp().run()
