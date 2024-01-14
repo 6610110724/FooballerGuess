@@ -99,7 +99,6 @@ class ButtonInGame(Screen):
         layout.add_widget(self.pause_button)
         layout.add_widget(self.exit_button)
         
-        
         self.add_widget(layout)
         Clock.schedule_interval(self.update_timer, 1)
 
@@ -149,7 +148,6 @@ class ButtonInGame(Screen):
             self.score_label.text = f"Score : {score}"
             self.answer_button.text = f'Incorrect, Try Again'
             
-
     #Start
     def start_game(self):
         self.is_game_started = True
