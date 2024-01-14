@@ -75,9 +75,9 @@ class ButtonInGame(Screen):
         
         self.exit_button = Button(text='Exit', on_press=self.exit, size_hint_y=None, size=(1200, 50), font_size=20)
         self.exit_button.background_color = (255/255, 1/255, 1/255, 1)
-        
-        self.score_label = Label(text="Score : " + ' ', size_hint_y=None, size=(1200, 50))
-        self.timer_label = Label(text="Time : 30", size_hint_y=None, size=(1200, 50))
+
+        self.score_label = Label(text = f"Score : 0" , size_hint_y=None, size=(1200, 50))
+        self.timer_label = Label(text = "Time : 60", size_hint_y=None, size=(1200, 50))
         
 
         layout.add_widget(self.image)
@@ -95,10 +95,22 @@ class ButtonInGame(Screen):
         self.current_footballer = random.choice(self.footballers)
         self.image.source = f'image/{self.current_footballer}.png'  
         self.text_input.text = ''
-        
+
+    def update_timer(self, dt):
+        if self.is_game_started and not self.is_paused:
+            remaining_time = int(self.timer_label.text.split()[-1])
+            if remaining_time > 0:
+                remaining_time -= 1
+                self.timer_label.text = f"Time remaining : {remaining_time}"
+            else:
+                self.show_game_over_popup()
+            
     def check_answer(self, instance):
         user_input = self.text_input.text.lower()
+        score = int(self.score_label.text.split()[-1])
         if user_input == self.current_footballer:
+            score += 1
+            self.score_label.text = f"Score : {score}"
             self.new_game()
         else:
             self.answer_button.text = f'Incorrect, Try Again'
@@ -114,7 +126,7 @@ class ButtonInGame(Screen):
         popup.open()
         
     def reset_timer(self):
-        self.timer_label.text = "Time remaining: 30"
+        self.timer_label.text = "Time remaining: 60"
 
     def toggle_pause(self, instance):
         self.is_paused = not self.is_paused
@@ -123,20 +135,11 @@ class ButtonInGame(Screen):
         else:
             self.pause_button.text = 'Pause'
 
-    def update_timer(self, dt):
-        if self.is_game_started and not self.is_paused:
-            remaining_time = int(self.timer_label.text.split()[-1])
-            if remaining_time > 0:
-                remaining_time -= 1
-                self.timer_label.text = f"Time remaining: {remaining_time}"
-            else:
-                self.show_game_over_popup()
-    
-
     def show_game_over_popup(self):
+        score = int(self.score_label.text.split()[-1])
         self.is_game_started = False
         self.reset_timer()
-        popup = Popup(title='Time Up', content=Label(text="Your Score :" + f"{score}"), size_hint=(None, None),
+        popup = Popup(title='Time Up', content=Label(text=f"Your Score : {score}"), size_hint=(None, None),
                       size=(400, 200))
         popup.open()
         self.exit
