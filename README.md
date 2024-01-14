@@ -1,9 +1,7 @@
 # FootballerGuess
 This is a Kivy game that test your knowledge about football players.
 
-## Features
-
-### Footballer Guess Game
+### About Footballer Guess Game
 - Test your knowledge about football players.
 - See an image of football player.
 - Type his name correctly as you know.
@@ -38,8 +36,9 @@ This is a Kivy game that test your knowledge about football players.
 ## Game Example
 
 <div align="center">
-    <img src=" " alt="Screenshot 1" width="400"/>
-    <img src=" " alt="Screenshot 2" width="400"/>
+    <img src="![Uploading entername.png…]()
+" alt="Enter Name" width="400"/>
+    <img src=" " alt="" width="400"/>
 </div>
 
 <div align="center">
@@ -48,6 +47,3 @@ This is a Kivy game that test your knowledge about football players.
 </div>
 
 
-## Dependencies
-
-- Kivy: [Kivy Official Site](https://kivy.org/)
