@@ -8,10 +8,12 @@ from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.image import Image
 
+
 from kivy.clock import Clock
 import random
 
 
+#startMenu
 class StartMenu(Screen):
     def __init__(self, **kwargs):
         super(StartMenu, self).__init__(**kwargs)
@@ -37,14 +39,19 @@ class StartMenu(Screen):
         layout.add_widget(self.start_button)
 
         self.add_widget(layout)
+        
+    #nameforsave (savingcode is not available)
+    def callback(self, instance):
+        self.start_button.text = 'Join with name :' + ' ' + self.name_input.text
 
+    #startgame
     def go_to_game(self, instance):
         self.manager.get_screen('Button_In_Game').start_game()
         self.manager.current = 'Button_In_Game'
 
-    def callback(self, instance):
-        self.start_button.text = 'Join with name :' + ' ' + self.name_input.text
 
+
+#MainGame
 class ButtonInGame(Screen):
     def __init__(self, **kwargs):
         super(ButtonInGame, self).__init__(**kwargs)
@@ -53,7 +60,7 @@ class ButtonInGame(Screen):
         self.is_game_started = False
 
         layout = BoxLayout(orientation='vertical')
-#FootballerList
+    #FootballerList
         self.footballers = ["alisson", "beckham", "de gea", "de bruyne", "del piero",
                             "ronaldo", "messi", "mbappe", "modric", "ronaldinho",
                             "kaka", "gerrard", "haaland", "van dijk", "kane",
@@ -61,7 +68,7 @@ class ButtonInGame(Screen):
         random.shuffle(self.footballers)
         self.current_footballer = None
 
-#GameLogics
+    #Game
         self.image = Image(source='', size_hint_y=None, size=(1200, 400))
 
         self.text_input = TextInput(multiline=False, size_hint_y=None, size=(1200, 140), font_size=60)
@@ -70,7 +77,7 @@ class ButtonInGame(Screen):
         self.answer_button.background_color = (1/255, 255/255, 1/255, 1)
         self.new_game()
     
-#ExtraButtons
+    #Buttons
         self.pause_button = Button(text='Pause', on_press=self.toggle_pause, size_hint_y=None, size=(1200,70), font_size=20)
         self.pause_button.background_color = (255/255, 255/255, 1/255, 1)
         
@@ -83,7 +90,7 @@ class ButtonInGame(Screen):
         self.timer_label = Button(text = "Time : 60", size_hint_y=None, size=(1200, 50))
         self.timer_label.background_color = (1/255, 30/255, 130/255, 1)
         
-
+    #Widgets
         layout.add_widget(self.image)
         layout.add_widget(self.text_input)
         layout.add_widget(self.answer_button)
@@ -96,12 +103,14 @@ class ButtonInGame(Screen):
         self.add_widget(layout)
         Clock.schedule_interval(self.update_timer, 1)
 
+    #not random a randomized again
     def shuffle_footballers(self):
         random.shuffle(self.footballers)
 
     def new_game(self):
         if not self.footballers:
-#FootballerList not random a randomized again
+
+            #FootballerList for not random a randomized again
             self.footballers = ["alisson", "beckham", "de gea", "de bruyne", "del piero",
                                 "ronaldo", "messi", "mbappe", "modric", "ronaldinho",
                                 "kaka", "gerrard", "haaland", "van dijk", "kane",
@@ -112,6 +121,7 @@ class ButtonInGame(Screen):
         self.image.source = f'image/{self.current_footballer}.png'
         self.text_input.text = ''
 
+    #timer
     def update_timer(self, dt):
         if self.is_game_started and not self.is_paused:
             remaining_time = int(self.timer_label.text.split()[-1])
@@ -121,7 +131,8 @@ class ButtonInGame(Screen):
 
             else:
                 self.show_game_over_popup()
-            
+
+    #Check
     def check_answer(self, instance):
         user_input = self.text_input.text.lower()
         score = int(self.score_label.text.split()[-1])
@@ -134,12 +145,16 @@ class ButtonInGame(Screen):
             else:
                 self.answer_button.text = 'Answer'
         else:
+            score -= 1
+            self.score_label.text = f"Score : {score}"
             self.answer_button.text = f'Incorrect, Try Again'
+            
 
+    #Start
     def start_game(self):
         self.is_game_started = True
 
-
+    #Exit
     def exit(self, instance):
         self.manager.current = 'start_menu'
         self.reset_timer()
@@ -148,13 +163,16 @@ class ButtonInGame(Screen):
                       size=(400, 200))
         popup.open()
         
+    #ResetTimer
     def reset_timer(self):
         self.timer_label.text = "Time : 60"
         self.is_paused = True
         
+    #ResetScore
     def reset_score(self):
         self.score_label.text = "Score : 0"
 
+    #pausbutton
     def toggle_pause(self, instance):
         self.is_paused = not self.is_paused
         if self.pause_button.text == 'Pause':
@@ -170,7 +188,7 @@ class ButtonInGame(Screen):
             self.answer_button.disabled = False
             self.pause_button.text = 'Pause'
         
-
+    #popup
     def show_game_over_popup(self):
         score = int(self.score_label.text.split()[-1])
         self.is_game_started = False
@@ -181,6 +199,7 @@ class ButtonInGame(Screen):
         self.manager.current = 'start_menu'
 
 
+#app.run
 class GuessFootballerApp(App):
     def build(self):
 
